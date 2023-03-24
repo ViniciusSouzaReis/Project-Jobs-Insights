@@ -3,20 +3,6 @@ from src.insights.jobs import read
 
 
 def get_max_salary(path: str) -> int:
-    """Get the maximum salary of all jobs
-
-    Must call `read`
-
-    Parameters
-    ----------
-    path : str
-        Must be passed to `read`
-
-    Returns
-    -------
-    int
-        The maximum salary paid out of all job opportunities
-    """
     data = read(path)
     higher_salary = []
     for salary in data:
@@ -26,20 +12,6 @@ def get_max_salary(path: str) -> int:
 
 
 def get_min_salary(path: str) -> int:
-    """Get the minimum salary of all jobs
-
-    Must call `read`
-
-    Parameters
-    ----------
-    path : str
-        Must be passed to `read`
-
-    Returns
-    -------
-    int
-        The minimum salary paid out of all job opportunities
-    """
     data = read(path)
     lower_salary = []
     for salary in data:
@@ -49,29 +21,20 @@ def get_min_salary(path: str) -> int:
 
 
 def matches_salary_range(job: Dict, salary: Union[int, str]) -> bool:
-    """Checks if a given salary is in the salary range of a given job
-
-    Parameters
-    ----------
-    job : dict
-        The job with `min_salary` and `max_salary` keys
-    salary : int
-        The salary to check if matches with salary range of the job
-
-    Returns
-    -------
-    bool
-        True if the salary is in the salary range of the job, False otherwise
-
-    Raises
-    ------
-    ValueError
-        If `job["min_salary"]` or `job["max_salary"]` doesn't exists
-        If `job["min_salary"]` or `job["max_salary"]` aren't valid integers
-        If `job["min_salary"]` is greather than `job["max_salary"]`
-        If `salary` isn't a valid integer
-    """
-    raise NotImplementedError
+    min = "min_salary"
+    max = "max_salary"
+    if min not in job or max not in job:
+        raise ValueError
+    if (
+        not str(job[min]).isdigit()
+        or not str(job[max]).isdigit()
+    ):
+        raise ValueError
+    if int(job[min]) > int(job[max]):
+        raise ValueError
+    if not str(salary).lstrip("-").isdigit():
+        raise ValueError
+    return int(job[min]) <= int(salary) <= int(job[max])
 
 
 def filter_by_salary_range(
